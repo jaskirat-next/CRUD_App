@@ -1,4 +1,5 @@
 <?php
+$insert = false;
 $servername = "localhost";
 $usrename = "root";
 $password = "";
@@ -8,12 +9,8 @@ $conn = mysqli_connect($servername ,$usrename , $password, $database);
 if(!$conn){
   die("Failed to connect: " . mysqli_connect_error());
 }
-else{
-  echo "Connected successfuly";
-}
 
-//Check the request
-echo $_SERVER['REQUEST_METHOD'];
+
 
 //Insert data into database
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -23,10 +20,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   $sql = "INSERT INTO `note` (`title`, `description`, `tstamp`) VALUES ('$title', '$disc', current_timestamp())";
   $result = mysqli_query($conn , $sql);
   if($result){
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+    $insert = true;
+    header("Location: boot.php"); 
+    exit(); 
   }
   else{
     echo "Failed";
@@ -43,6 +39,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   <title>Death Note</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+  <script>
+  $(document).ready(function () {
+    $('#myTable').DataTable(); // Ensure the table has the correct ID
+  });
+</script>
 </head>
 
 <body>
@@ -85,6 +91,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
       </div>
     </div>
   </nav>
+
+  <?php
+  if($insert){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+    <strong>Success!</strong> Your note has been submitted.
+    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+  </div>";
+  
+  }
+  ?>
   <div class="container my-4">
     <form action="/CRUD/boot.php" method="POST">
       <div class="mb-3">
@@ -101,7 +117,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 
     <div class="table_Data">
-      <table class="table">
+      <table class="table" id="myTable">
         <thead>
           <tr>
             <th scope="col">S.No</th>
@@ -137,6 +153,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+    
+
 </body>
 
 </html>
