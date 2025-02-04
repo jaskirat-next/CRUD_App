@@ -39,19 +39,45 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   <title>Death Note</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
-  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 
   <script>
-  $(document).ready(function () {
-    $('#myTable').DataTable(); // Ensure the table has the correct ID
-  });
-</script>
+    $(document).ready(function () {
+      $('#myTable').DataTable(); // Ensure the table has the correct ID
+    });
+  </script>
 </head>
 
 <body>
+
+  <!-- Button edit modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal">
+    Launch demo modal
+  </button>
+
+  <!-- edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Navbar</a>
@@ -126,7 +152,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             <th scope="col">Action</th>
           </tr>
         </thead>
-        
+
         <?php
         $sno = 0;
   $sql = "SELECT * FROM `note`";
@@ -137,8 +163,9 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
       <th scope='row'>" . $sno ."</th>
       <td>" . $row['title'] . "</td>
       <td>". $row['description'] ."</td>
-      <td>Action</td>
+      <td><button class=' edit btn btn-sm btn-primary'>Edit</button> <a href='del'>Delete</a></td>
     </tr>";
+    
   }
   ?>
 
@@ -153,8 +180,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-    
 
+  <script>
+    let edits = document.getElementsByClassName('edit');
+    Array.from(edits).forEach((element)=>{
+      element.addEventListener("click", (e)=>{
+        console.log("edit", e.target.parentNode.parentNode);
+      })
+    }
+
+    )
+  </script>
 </body>
 
 </html>
