@@ -1,19 +1,37 @@
 <?php
 $insert = false;
 $servername = "localhost";
-$usrename = "root";
+$username = "root";
 $password = "";
 $database = "notes";
 
-$conn = mysqli_connect($servername ,$usrename , $password, $database);
+$conn = mysqli_connect($servername ,$username , $password, $database);
 if(!$conn){
   die("Failed to connect: " . mysqli_connect_error());
 }
 
-
+if(isset($_GET['delete'])){
+  $sno = $_GET['delete'];
+  $sql = "DELETE FROM `note` WHERE `sno` = $sno";
+  $result = mysqli_query($conn , $sql);
+}
 
 //Insert data into database
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
+  if(isset($_POST['snoEdit'])){
+    $sno = $_POST['snoEdit'];
+    $title = $_POST['titleEdit'];
+    $disc = $_POST['descriptionEdit'];
+    $sql = "UPDATE `note` SET `title` = '$title', `description` = '$disc' WHERE `sno` = $sno";
+    $result = mysqli_query($conn , $sql);
+    if($result){
+      echo "Record updated";
+    }
+    else{
+      echo "Failed";
+    }
+  }
+  else{
   $title = $_POST['title'];
   $disc = $_POST['description'];
 
@@ -27,6 +45,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
   else{
     echo "Failed";
   }
+}
 }
 ?>
 
@@ -69,6 +88,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         </div>
         <div class="modal-body">
           <form action="/CRUD/boot.php" method="POST">
+            <input type="hidden" name="snoEdit" id="snoEdit">
             <div class="mb-3">
               <label for="title" class="form-label">Note Title</label>
               <input type="text" name="titleEdit" class="form-control" id="titleEdit">
@@ -78,12 +98,12 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
               <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" rows="3"></textarea>
             </div>
       
-            <button type="submit" class="btn btn-primary">Update Note</button>
+            <!-- <button type="submit" class="btn btn-primary">Update Note</button> -->
+            <div class="modal-footer d-block mr-auto">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -174,7 +194,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
       <th scope='row'>" . $sno ."</th>
       <td>" . $row['title'] . "</td>
       <td>". $row['description'] ."</td>
-      <td><button class=' edit btn btn-sm btn-primary'>Edit</button> <a href='del'>Delete</a></td>
+      <td><button class=' edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button>
+       <button class='delete btn btn-sm btn-primary' id=d".$row['sno'].">Delete</button></td>
     </tr>";
     
   }
@@ -203,11 +224,28 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         console.log(title, description);
         titleEdit.value = title;
         descriptionEdit.value = description;
+        snoEdit.value = e.target.id;
+        console.log(e.target.id);
         $('#editModal').modal('toggle');
       })
-    }
+    })
 
-    )
+    let deletes = document.getElementsByClassName('delete');
+    Array.from(deletes).forEach((element)=>{
+      element.addEventListener("click", (e)=>{
+        console.log("edit", );
+        sno = e.target.id.substr(1,);
+        
+        if(confirm("Are you sure you want to delete this note!")){
+          console.log("Yes");
+          window.location = `/CRUD/boot.php?delete=${sno}`
+        }
+        else{
+          console.log("No");
+        }
+      })
+    })
+    
   </script>
 </body>
 
