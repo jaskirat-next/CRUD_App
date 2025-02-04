@@ -64,11 +64,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <h3 class="modal-title fs-5" id="exampleModalLabel">Edit Note</h3>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          ...
+          <form action="/CRUD/boot.php" method="POST">
+            <div class="mb-3">
+              <label for="title" class="form-label">Note Title</label>
+              <input type="text" name="titleEdit" class="form-control" id="titleEdit">
+            </div>
+            <div class="form-group">
+              <label for="desc">Note Description</label>
+              <textarea class="form-control" id="descriptionEdit" name="descriptionEdit" rows="3"></textarea>
+            </div>
+      
+            <button type="submit" class="btn btn-primary">Update Note</button>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -185,7 +196,14 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     let edits = document.getElementsByClassName('edit');
     Array.from(edits).forEach((element)=>{
       element.addEventListener("click", (e)=>{
-        console.log("edit", e.target.parentNode.parentNode);
+        console.log("edit", );
+        tr = e.target.parentNode.parentNode;
+        title = tr.getElementsByTagName("td")[0].innerText;
+        description = tr.getElementsByTagName("td")[1].innerText;
+        console.log(title, description);
+        titleEdit.value = title;
+        descriptionEdit.value = description;
+        $('#editModal').modal('toggle');
       })
     }
 
